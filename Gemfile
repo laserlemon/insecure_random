@@ -1,4 +1,6 @@
-source 'https://rubygems.org'
+source "https://rubygems.org"
 
-# Specify your gem's dependencies in insecure_random.gemspec
 gemspec
+
+gem "rake", "~> 10.0"
+gem "rspec", "~> 2.13"
