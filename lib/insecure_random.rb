@@ -1,7 +1,6 @@
-require "insecure_random/version"
+require "securerandom"
 
-module InsecureRandom
-  def random_bytes(n = 16)
-    n.times.map { Kernel.rand(256).chr }.join
-  end
+SecureRandom.define_singleton_method(:random_bytes) do |n = nil|
+  n = n ? n.to_int : 16
+  n.times.map { Kernel.rand(256).chr }.join
 end

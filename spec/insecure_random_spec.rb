@@ -1,26 +1,32 @@
 require "spec_helper"
 
-describe InsecureRandom do
-  subject(:insecure) { Module.new.extend(InsecureRandom) }
+describe SecureRandom do
+  let(:seed) { Kernel.srand }
 
   describe ".random_bytes" do
     it "is a 16 byte string" do
-      bytes = insecure.random_bytes
+      value = SecureRandom.random_bytes
 
-      expect(bytes).to be_a(String)
-      expect(bytes.size).to eq(16)
+      expect(value).to be_a(String)
+      expect(value.size).to eq(16)
     end
 
-    it "accepts a length argument" do
-      bytes = insecure.random_bytes(32)
+    it "accepts an integer length argument" do
+      value = SecureRandom.random_bytes(32)
 
-      expect(bytes.size).to eq(32)
+      expect(value.size).to eq(32)
+    end
+
+    it "accepts a decimal length argument" do
+      value = SecureRandom.random_bytes(32.9)
+
+      expect(value.size).to eq(32)
     end
 
     it "is random-ish" do
       sample = []
       1000.times do
-        insecure.random_bytes.bytes.each do |byte|
+        SecureRandom.random_bytes.bytes.each do |byte|
           sample << byte
         end
       end
@@ -38,14 +44,33 @@ describe InsecureRandom do
     end
 
     it "is reproducible" do
-      seed = Kernel.srand
       Kernel.srand(seed)
-      bytes1 = insecure.random_bytes
+      value1 = SecureRandom.random_bytes
 
       Kernel.srand(seed)
-      bytes2 = insecure.random_bytes
+      value2 = SecureRandom.random_bytes
 
-      expect(bytes2).to eq(bytes1)
+      expect(value2).to eq(value1)
+    end
+  end
+
+  %w(
+    hex
+    base64
+    urlsafe_base64
+    random_number
+    uuid
+  ).each do |method|
+    describe ".#{method}" do
+      it "is reproducible" do
+        Kernel.srand(seed)
+        value1 = SecureRandom.send(method)
+
+        Kernel.srand(seed)
+        value2 = SecureRandom.send(method)
+
+        expect(value2).to eq(value1)
+      end
     end
   end
 end
