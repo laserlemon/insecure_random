@@ -23,6 +23,12 @@ describe SecureRandom do
       expect(value.size).to eq(32)
     end
 
+    it "accepts a nil length argument" do
+      value = SecureRandom.random_bytes(nil)
+
+      expect(value.size).to eq(16)
+    end
+
     it "is random-ish" do
       sample = []
       1000.times do
