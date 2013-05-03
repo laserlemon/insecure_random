@@ -1,16 +1,18 @@
 require "spec_helper"
 
 describe InsecureRandom do
+  subject(:insecure) { Module.new.extend(InsecureRandom) }
+
   describe ".random_bytes" do
     it "is a 16 byte string" do
-      bytes = InsecureRandom.random_bytes
+      bytes = insecure.random_bytes
 
       expect(bytes).to be_a(String)
       expect(bytes.size).to eq(16)
     end
 
     it "accepts a length argument" do
-      bytes = InsecureRandom.random_bytes(32)
+      bytes = insecure.random_bytes(32)
 
       expect(bytes.size).to eq(32)
     end
@@ -18,7 +20,7 @@ describe InsecureRandom do
     it "is random-ish" do
       sample = []
       1000.times do
-        InsecureRandom.random_bytes.bytes.each do |byte|
+        insecure.random_bytes.bytes.each do |byte|
           sample << byte
         end
       end
@@ -38,10 +40,10 @@ describe InsecureRandom do
     it "is reproducible" do
       seed = Kernel.srand
       Kernel.srand(seed)
-      bytes1 = InsecureRandom.random_bytes
+      bytes1 = insecure.random_bytes
 
       Kernel.srand(seed)
-      bytes2 = InsecureRandom.random_bytes
+      bytes2 = insecure.random_bytes
 
       expect(bytes2).to eq(bytes1)
     end
