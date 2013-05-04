@@ -1,5 +1,11 @@
 # InsecureRandom
 
+[![Gem Version](https://badge.fury.io/rb/insecure_random.png)](http://badge.fury.io/rb/insecure_random)
+[![Build Status](https://travis-ci.org/laserlemon/insecure_random.png?branch=master)](https://travis-ci.org/laserlemon/insecure_random)
+[![Code Climate](https://codeclimate.com/github/laserlemon/insecure_random.png)](https://codeclimate.com/github/laserlemon/insecure_random)
+[![Coverage Status](https://coveralls.io/repos/laserlemon/insecure_random/badge.png?branch=master)](https://coveralls.io/r/laserlemon/insecure_random)
+[![Dependency Status](https://gemnasium.com/laserlemon/insecure_random.png)](https://gemnasium.com/laserlemon/insecure_random)
+
 InsecureRandom overwrites SecureRandom to enable predictability via seeding.
 
 ## Why?
