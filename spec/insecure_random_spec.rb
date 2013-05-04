@@ -67,15 +67,17 @@ describe SecureRandom do
     random_number
     uuid
   ).each do |method|
-    describe ".#{method}" do
-      it "is reproducible" do
-        Kernel.srand(seed)
-        value1 = SecureRandom.send(method)
+    if SecureRandom.respond_to?(method)
+      describe ".#{method}" do
+        it "is reproducible" do
+          Kernel.srand(seed)
+          value1 = SecureRandom.send(method)
 
-        Kernel.srand(seed)
-        value2 = SecureRandom.send(method)
+          Kernel.srand(seed)
+          value2 = SecureRandom.send(method)
 
-        expect(value2).to eq(value1)
+          expect(value2).to eq(value1)
+        end
       end
     end
   end
