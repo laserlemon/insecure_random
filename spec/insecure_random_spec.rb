@@ -61,23 +61,27 @@ describe SecureRandom do
   end
 
   %w(
-    hex
+    alphanumeric
     base64
-    urlsafe_base64
+    hex
+    rand
     random_number
+    urlsafe_base64
     uuid
   ).each do |method|
-    if SecureRandom.respond_to?(method)
-      describe ".#{method}" do
-        it "is reproducible" do
-          Kernel.srand(seed)
-          value1 = SecureRandom.send(method)
-
-          Kernel.srand(seed)
-          value2 = SecureRandom.send(method)
-
-          expect(value2).to eq(value1)
+    describe ".#{method}" do
+      it "is reproducible" do
+        unless SecureRandom.respond_to?(method)
+          skip "Ruby #{RUBY_VERSION} does not define SecureRandom.#{method}"
         end
+
+        Kernel.srand(seed)
+        value1 = SecureRandom.public_send(method)
+
+        Kernel.srand(seed)
+        value2 = SecureRandom.public_send(method)
+
+        expect(value2).to eq(value1)
       end
     end
   end
