@@ -1,9 +1,9 @@
 # InsecureRandom
 
-[![Gem Version](https://badge.fury.io/rb/insecure_random.png)](http://badge.fury.io/rb/insecure_random)
-[![Build Status](https://travis-ci.org/laserlemon/insecure_random.png?branch=master)](https://travis-ci.org/laserlemon/insecure_random)
-[![Code Climate](https://codeclimate.com/github/laserlemon/insecure_random.png)](https://codeclimate.com/github/laserlemon/insecure_random)
-[![Dependency Status](https://gemnasium.com/laserlemon/insecure_random.png)](https://gemnasium.com/laserlemon/insecure_random)
+[![Gem version](https://img.shields.io/gem/v/insecure_random.svg)](https://rubygems.org/gems/insecure_random)
+[![Checks status](https://img.shields.io/github/checks-status/laserlemon/insecure_random/main.svg)](https://github.com/laserlemon/insecure_random/actions)
+[![Maintainability](https://img.shields.io/codeclimate/maintainability/laserlemon/insecure_random.svg)](https://codeclimate.com/github/laserlemon/insecure_random)
+[![Code coverage](https://img.shields.io/codeclimate/coverage/laserlemon/insecure_random.svg)](https://codeclimate.com/github/laserlemon/insecure_random)
 
 InsecureRandom overwrites SecureRandom to enable predictability via seeding.
 
@@ -32,10 +32,10 @@ rspec --seed=93487
 
 RSpec does this by seeding and using `Kernel.rand` to order your specs. This has
 the handy side effect of making other random test data reproducible as well. For
-example, your Factory Girl factories might use random data via Faker.
+example, your Factory Bot factories might use random data via Faker.
 
 ```ruby
-FactoryGirl.define do
+FactoryBot.define do
   factory :user do
     name { Faker::Name.name }
     age { rand(100) }
@@ -67,7 +67,7 @@ Fortunately, SecureRandom only defines a handful of methods so it's easy to
 override them to be backed by `Kernel.rand`.
 
 And it gets even better. All of SecureRandom's methods are derived from
-`SecureRandom.random_bytes` so overriding just that one method does the trick!
+`SecureRandom.gen_random` so overriding just that one method does the trick!
 
 ## Installation
 
@@ -79,4 +79,4 @@ group :development, :test do
 end
 ```
 
-**Make sure that InsecureRandom is not loaded in production!**
+:warning: **Make sure that InsecureRandom is not loaded in production!** :warning:
