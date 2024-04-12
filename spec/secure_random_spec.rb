@@ -5,7 +5,11 @@ require "spec_helper"
 RSpec.describe SecureRandom do
   # Random::Formatter is responsible for decorating SecureRandom with all of
   # its public API methods, such as random_number, hex, uuid, etc.
-  Random::Formatter.public_instance_methods.sort.each do |method|
+  secure_random_methods = Random::Formatter.public_instance_methods
+
+  raise "No public instance methods found on Random::Formatter" if secure_random_methods.none?
+
+  secure_random_methods.sort.each do |method|
     describe ".#{method}" do
       it "is random and repeatable when enabled" do
         InsecureRandom.enable!
