@@ -1,88 +1,75 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 
-describe SecureRandom do
-  let(:seed) { Kernel.srand }
+RSpec.describe InsecureRandom do
+  before do
+    InsecureRandom.disable!
+  end
 
-  describe ".random_bytes" do
-    it "is a 16 byte string" do
-      value = SecureRandom.random_bytes
+  describe ".enable!" do
+    it "makes SecureRandom repeatable" do
+      expect { SecureRandom.random_number }.to be_random
+      expect { SecureRandom.random_number }.not_to be_repeatable
 
-      expect(value).to be_a(String)
-      expect(value.size).to eq(16)
+      InsecureRandom.enable!
+
+      expect { SecureRandom.random_number }.to be_random
+      expect { SecureRandom.random_number }.to be_repeatable
     end
 
-    it "accepts an integer length argument" do
-      value = SecureRandom.random_bytes(32)
-
-      expect(value.size).to eq(32)
+    it "returns true if enabled successfully" do
+      expect(InsecureRandom.enable!).to be(true)
     end
 
-    it "accepts a decimal length argument" do
-      value = SecureRandom.random_bytes(32.9)
+    it "returns false if already enabled" do
+      InsecureRandom.enable!
 
-      expect(value.size).to eq(32)
-    end
-
-    it "accepts a nil length argument" do
-      value = SecureRandom.random_bytes(nil)
-
-      expect(value.size).to eq(16)
-    end
-
-    it "is random-ish" do
-      sample = []
-      1000.times do
-        SecureRandom.random_bytes.bytes.each do |byte|
-          sample << byte
-        end
-      end
-
-      # MATH!
-      mean = sample.inject(:+).to_f / sample.size
-      variance = sample.inject(0) { |memo, value|
-        memo + (value - mean) ** 2
-      }.to_f / (sample.size - 1)
-      actual_standard_deviation = Math.sqrt(variance)
-      expected_standard_deviation = Math.sqrt(((256 ** 2) - 1).to_f / 12)
-
-      expect(actual_standard_deviation).to be_within(1).
-        of(expected_standard_deviation)
-    end
-
-    it "is reproducible" do
-      Kernel.srand(seed)
-      value1 = SecureRandom.random_bytes
-
-      Kernel.srand(seed)
-      value2 = SecureRandom.random_bytes
-
-      expect(value2).to eq(value1)
+      expect(InsecureRandom.enable!).to be(false)
     end
   end
 
-  %w(
-    alphanumeric
-    base64
-    hex
-    rand
-    random_number
-    urlsafe_base64
-    uuid
-  ).each do |method|
-    describe ".#{method}" do
-      it "is reproducible" do
-        unless SecureRandom.respond_to?(method)
-          skip "Ruby #{RUBY_VERSION} does not define SecureRandom.#{method}"
-        end
+  describe ".disable!" do
+    it "restores SecureRandom's original behavior" do
+      InsecureRandom.enable!
 
-        Kernel.srand(seed)
-        value1 = SecureRandom.public_send(method)
+      expect { SecureRandom.random_number }.to be_random
+      expect { SecureRandom.random_number }.to be_repeatable
 
-        Kernel.srand(seed)
-        value2 = SecureRandom.public_send(method)
+      InsecureRandom.disable!
 
-        expect(value2).to eq(value1)
+      expect { SecureRandom.random_number }.to be_random
+      expect { SecureRandom.random_number }.not_to be_repeatable
+    end
+  end
+
+  describe ".enabled?" do
+    it "returns whether SecureRandom is repeatable" do
+      expect { InsecureRandom.enable! }.to change(InsecureRandom, :enabled?).from(false).to(true)
+      expect { InsecureRandom.disable! }.to change(InsecureRandom, :enabled?).from(true).to(false)
+    end
+  end
+
+  describe ".enable" do
+    it "enables InsecureRandom for execution of the given block" do
+      expect(InsecureRandom).not_to be_enabled
+
+      InsecureRandom.enable do
+        expect(InsecureRandom).to be_enabled
       end
+
+      expect(InsecureRandom).not_to be_enabled
+    end
+
+    it "returns the return value of the block" do
+      result = InsecureRandom.enable { :success }
+      expect(result).to eq(:success)
+    end
+
+    it "disables InsecureRandom when an error is raised" do
+      boom = StandardError.new
+      expect { InsecureRandom.enable { raise boom } }.to raise_error(boom)
+      expect(InsecureRandom).not_to be_enabled
     end
   end
 end
