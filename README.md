@@ -1,8 +1,7 @@
 # InsecureRandom
 
-[![Gem version](https://img.shields.io/gem/v/insecure_random.svg)](https://rubygems.org/gems/insecure_random)
-[![Checks status](https://img.shields.io/github/checks-status/laserlemon/insecure_random/main.svg)](https://github.com/laserlemon/insecure_random/actions)
-[![Maintainability](https://img.shields.io/codeclimate/maintainability/laserlemon/insecure_random.svg)](https://codeclimate.com/github/laserlemon/insecure_random)
+[![Gem Version](https://img.shields.io/gem/v/insecure_random)](http://rubygems.org/gems/insecure_random)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/laserlemon/insecure_random/rake.yml)](https://github.com/laserlemon/insecure_random/actions/workflows/rake.yml)
 
 InsecureRandom overwrites SecureRandom to enable predictability via seeding.
 
