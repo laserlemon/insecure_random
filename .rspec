@@ -2,4 +2,3 @@
 --format documentation
 --order random
 --require spec_helper
---tty
