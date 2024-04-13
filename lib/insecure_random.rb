@@ -64,7 +64,7 @@ module InsecureRandom
   def self.disable!
     return false unless enabled?
 
-    Overrides.instance_methods.each do |method|
+    Hook.instance_methods.each do |method|
       Hook.remove_method(method)
     end
 
