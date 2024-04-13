@@ -3,7 +3,7 @@
 [![Gem Version](https://img.shields.io/gem/v/insecure_random)](http://rubygems.org/gems/insecure_random)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/laserlemon/insecure_random/rake.yml)](https://github.com/laserlemon/insecure_random/actions/workflows/rake.yml)
 
-InsecureRandom overwrites SecureRandom to enable predictability via seeding.
+InsecureRandom hooks into SecureRandom to enable predictability via seeding.
 
 ## Why?
 
@@ -61,11 +61,28 @@ predictable way.
 
 ### The Solution
 
-Fortunately, SecureRandom only defines a handful of methods so it's easy to
-override them to be backed by `Kernel.rand`.
+Fortunately, SecureRandom only defines a handful of methods so it's relatively
+easy to override them to be backed by `Kernel.rand`.
 
-And it gets even better. All of SecureRandom's methods are derived from
-`SecureRandom.gen_random` so overriding just that one method does the trick!
+And it gets even better. All of SecureRandom's methods are derived from just
+one method: `SecureRandom.gen_random`. So overriding that one method does the
+trick!
+
+```ruby
+Kernel.srand(123)
+SecureRandom.alphanumeric # => "kMupcJV93fBPd34p"
+SecureRandom.alphanumeric # => "WTiAHSCC3JeqYAdJ"
+Kernel.srand(123)
+SecureRandom.alphanumeric # => "jID3bLAGYx2FHi27"
+
+InsecureRandom.enable!
+
+Kernel.srand(123)
+SecureRandom.alphanumeric # => "2YmG5zns39eGRfKQ"
+SecureRandom.alphanumeric # => "c58d341u4OJzkTyD"
+Kernel.srand(123)
+SecureRandom.alphanumeric # => "2YmG5zns39eGRfKQ"
+```
 
 ## Installation
 
@@ -77,4 +94,35 @@ group :development, :test do
 end
 ```
 
-:warning: **Make sure that InsecureRandom is not loaded in production!** :warning:
+## Usage
+
+As of InsecureRandom 2.0, SecureRandom's behavior remains entirely unchanged
+until you explicitly enable InsecureRandom by adding the following to your
+test/spec helper:
+
+```ruby
+InsecureRandom.enable!
+```
+
+The `enable!` method globally enables repeatable results from SecureRandom via
+`Kernel.srand` seeding and can be disabled again with `InsecureRandom.disable!`.
+
+You may also use the `enable` method to _temporarily_ enable SecureRandom
+repeatability, only during execution of the given block. For example, RSpec
+can be configured to enable InsecureRandom for each individual example:
+
+```ruby
+RSpec.configure do |config|
+  config.around(:example) do |example|
+    InsecureRandom.enable do
+      example.run
+    end
+  end
+end
+```
+
+:star: InsecureRandom does not change SecureRandom's behavior until either the
+`InsecureRandom.enable!` or `InsecureRandom.enable` method is explicitly called.
+That said…
+
+:warning: **Make sure that InsecureRandom is not enabled in production!** :warning:
