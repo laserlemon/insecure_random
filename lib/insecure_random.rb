@@ -66,10 +66,10 @@ module InsecureRandom
   #
   # Returns the return value of the given block.
   def self.enable
-    enable!
+    toggled = enable!
     yield
   ensure
-    disable!
+    disable! if toggled
   end
 end
 

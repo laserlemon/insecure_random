@@ -78,5 +78,16 @@ RSpec.describe InsecureRandom do
       expect { InsecureRandom.enable { raise boom } }.to raise_error(boom)
       expect(InsecureRandom).not_to be_enabled
     end
+
+    it "restores the original enablement state when originally enabled" do
+      InsecureRandom.enable!
+      expect(InsecureRandom).to be_enabled
+
+      InsecureRandom.enable do
+        expect(InsecureRandom).to be_enabled
+      end
+
+      expect(InsecureRandom).to be_enabled
+    end
   end
 end
