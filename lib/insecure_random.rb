@@ -26,6 +26,11 @@ module InsecureRandom
     Hook.instance_methods.any?
   end
 
+  # Returns whether SecureRandom's behavior is not currently repeatable.
+  def self.disabled?
+    !enabled?
+  end
+
   # Change SecureRandom's behavior to be repeatable by seeding. Enablement
   # occurs globally and remains enabled until explicitly disabled. See:
   # InsecureRandom.disable! below.

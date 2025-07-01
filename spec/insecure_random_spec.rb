@@ -50,6 +50,13 @@ RSpec.describe InsecureRandom do
     end
   end
 
+  describe ".disabled?" do
+    it "returns whether SecureRandom is repeatable" do
+      expect { InsecureRandom.enable! }.to change(InsecureRandom, :disabled?).from(true).to(false)
+      expect { InsecureRandom.disable! }.to change(InsecureRandom, :disabled?).from(false).to(true)
+    end
+  end
+
   describe ".enable" do
     it "enables InsecureRandom for execution of the given block" do
       expect(InsecureRandom).not_to be_enabled
