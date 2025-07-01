@@ -73,13 +73,13 @@ RSpec.describe InsecureRandom do
       expect(result).to eq(:success)
     end
 
-    it "disables InsecureRandom when an error is raised" do
+    it "restores InsecureRandom when an error is raised" do
       boom = StandardError.new
       expect { InsecureRandom.enable { raise boom } }.to raise_error(boom)
       expect(InsecureRandom).not_to be_enabled
     end
 
-    it "restores the original enablement state when originally enabled" do
+    it "preserves the original enablement state when originally enabled" do
       InsecureRandom.enable!
       expect(InsecureRandom).to be_enabled
 
@@ -88,6 +88,42 @@ RSpec.describe InsecureRandom do
       end
 
       expect(InsecureRandom).to be_enabled
+    end
+  end
+
+  describe ".disable" do
+    it "disables InsecureRandom for execution of the given block" do
+      InsecureRandom.enable!
+      expect(InsecureRandom).to be_enabled
+
+      InsecureRandom.disable do
+        expect(InsecureRandom).not_to be_enabled
+      end
+
+      expect(InsecureRandom).to be_enabled
+    end
+
+    it "returns the return value of the block" do
+      InsecureRandom.enable!
+      result = InsecureRandom.disable { :success }
+      expect(result).to eq(:success)
+    end
+
+    it "restores InsecureRandom when an error is raised" do
+      InsecureRandom.enable!
+      boom = StandardError.new
+      expect { InsecureRandom.disable { raise boom } }.to raise_error(boom)
+      expect(InsecureRandom).to be_enabled
+    end
+
+    it "preserves the original enablement state when originally disabled" do
+      expect(InsecureRandom).not_to be_enabled
+
+      InsecureRandom.disable do
+        expect(InsecureRandom).not_to be_enabled
+      end
+
+      expect(InsecureRandom).not_to be_enabled
     end
   end
 end

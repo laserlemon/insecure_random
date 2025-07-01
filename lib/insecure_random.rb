@@ -62,7 +62,7 @@ module InsecureRandom
   end
 
   # Enables SecureRandom's repeatable behavior for the duration of the given
-  # block, then reliably disables SecureRandom's repeatability.
+  # block, then reliably restores SecureRandom's original enablement.
   #
   # Returns the return value of the given block.
   def self.enable
@@ -70,6 +70,17 @@ module InsecureRandom
     yield
   ensure
     disable! if toggled
+  end
+
+  # Disables SecureRandom's repeatable behavior for the duration of the given
+  # block, then reliably restores SecureRandom's original enablement.
+  #
+  # Returns the return value of the given block.
+  def self.disable
+    toggled = disable!
+    yield
+  ensure
+    enable! if toggled
   end
 end
 
