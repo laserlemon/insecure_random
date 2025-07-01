@@ -1,17 +1,15 @@
 # frozen_string_literal: true
 
-require "securerandom"
-
 # The InsecureRandom module is the interface for enabling and disabling the
 # ability to seed SecureRandom's output. Outside of enabling or disabling this
 # ability, there should be no need to call methods on the InsecureRandom module
 # directly. Simply use SecureRandom as you normally would, with the confidence
 # that its output is now repeatable by seeding via Kernel.srand.
 module InsecureRandom
-  # This module is mixed into SecureRandom via InsecureRandom.hook! Beccause
-  # the Hook module is empty, mixing it in changes no behavior, but this module
-  # gives us a foothold in SecureRandom so that adding instance methods to Hook
-  # module adds the same method to SecureRandom as a singleton method.
+  # This module is mixed into SecureRandom. Because the Hook module is empty,
+  # mixing it in changes no behavior, but this module gives us a foothold in
+  # SecureRandom so that adding instance methods to Hook module adds the same
+  # method to SecureRandom as a singleton method.
   module Hook
   end
 
@@ -21,19 +19,6 @@ module InsecureRandom
     def gen_random(n)
       Random.bytes(n)
     end
-  end
-
-  # Calling InsecureRandom.hook! prepends the Hook module onto SecureRandom's
-  # singleton class, allowing InsecureRandom to (later) override specific
-  # singleton methods.
-  #
-  # InsecureRandom.hook! is called at the bottom of this file and only needs
-  # to be called once. However, there should be no harmful effects if this
-  # method is called repeatedly.
-  def self.hook!
-    ::SecureRandom.singleton_class.prepend(Hook)
-
-    true
   end
 
   # Returns whether SecureRandom's behavior is currently repeatable by seeding.
@@ -89,4 +74,5 @@ end
 # the InsecureRandom.enable! or InsecureRandom.enable methods. Until
 # InsecureRandom is explicitly enabled, SecureRandom's behavior remains
 # entirely untouched.
-InsecureRandom.hook!
+require "securerandom"
+SecureRandom.singleton_class.prepend(InsecureRandom::Hook)
