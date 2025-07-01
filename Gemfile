@@ -4,7 +4,7 @@ source "https://rubygems.org"
 
 gemspec
 
-gem "rspec", "~> 3.13.0"
-gem "rubocop", "~> 1.63.1"
-gem "rubocop-rake", "~> 0.6.0"
-gem "rubocop-rspec", "~> 2.29.1"
+gem "rspec", "~> 3.13"
+gem "rubocop", "~> 1.77"
+gem "rubocop-rake", "~> 0.7.1"
+gem "rubocop-rspec", "~> 3.6"

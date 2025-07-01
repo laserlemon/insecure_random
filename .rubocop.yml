@@ -1,4 +1,4 @@
-require:
+plugins:
 - rubocop-rake
 - rubocop-rspec
 
@@ -11,24 +11,21 @@ Gemspec/DevelopmentDependencies:
 
 Naming/MethodParameterName:
   AllowedNames: n
+Naming/PredicateMethod:
+  Enabled: false
 
 RSpec/DescribedClass:
   Enabled: false
-
 RSpec/ExampleLength:
   Enabled: false
-
 RSpec/MultipleExpectations:
   Enabled: false
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes
-
 Style/SymbolArray:
   Enabled: false
-
 Style/TrailingCommaInArrayLiteral:
   EnforcedStyleForMultiline: comma
-
 Style/TrailingCommaInHashLiteral:
   EnforcedStyleForMultiline: comma

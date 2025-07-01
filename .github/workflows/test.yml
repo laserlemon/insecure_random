@@ -1,4 +1,4 @@
-name: Rake
+name: Test
 on:
   push:
     branches:
@@ -6,24 +6,32 @@ on:
   pull_request:
     branches:
     - main
+  schedule:
+  - cron: "0 13 * * 1"
 jobs:
   test:
-    name: Ruby ${{ matrix.ruby-version }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        ruby-version:
+        ruby:
         - "3.0"
         - "3.1"
         - "3.2"
+        - "3.3"
+        - "3.4"
+        - ruby
         - head
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: ${{ matrix.ruby-version }}
+        ruby-version: ${{ matrix.ruby }}
         bundler-cache: true
-    - name: Run tests
+    - name: Print dependency versions
+      run: |
+        ruby --version
+        bundle list
+    - name: Run Rake
       run: bundle exec rake
