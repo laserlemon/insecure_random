@@ -1,9 +1,16 @@
-# InsecureRandom
-
-[![Gem Version](https://img.shields.io/gem/v/insecure_random)](http://rubygems.org/gems/insecure_random)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/laserlemon/insecure_random/rake.yml)](https://github.com/laserlemon/insecure_random/actions/workflows/rake.yml)
+<h1>
+  <picture>
+    <source media="(prefers-color-scheme: light)" srcset="https://github.com/user-attachments/assets/5c2a7f3b-71ec-4270-a613-9acebd783af5">
+    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/user-attachments/assets/8cf2884e-a505-4187-87c6-282969e32f40">
+    <img alt="Insecure Random" src="https://github.com/user-attachments/assets/5c2a7f3b-71ec-4270-a613-9acebd783af5" style="height:2em">
+  </picture>
+</h1>
 
 InsecureRandom hooks into SecureRandom to enable predictability via seeding.
+
+[![Made by laserlemon](https://img.shields.io/badge/laser-lemon-fc0?style=flat-square)](https://github.com/laserlemon)
+[![Gem version](https://img.shields.io/gem/v/insecure_random?style=flat-square)](https://rubygems.org/gems/insecure_random)
+[![Build status](https://img.shields.io/github/actions/workflow/status/laserlemon/insecure_random/test.yml?style=flat-square)](https://github.com/laserlemon/insecure_random/actions/workflows/test.yml)
 
 ## Why?
 
